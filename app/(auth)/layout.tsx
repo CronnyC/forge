@@ -5,7 +5,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="w-full max-w-md">
         <div className="text-center mb-10">
           <h1 className="text-4xl font-black tracking-tighter" style={{ color: "var(--accent)" }}>
-            FORGE
+            FORMA
           </h1>
           <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
             Dynamic home fitness

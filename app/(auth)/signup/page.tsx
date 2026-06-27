@@ -24,7 +24,12 @@ export default function SignupPage() {
     setError(null);
 
     const supabase = createClient();
-    const { data, error: authError } = await supabase.auth.signUp({ email, password });
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://forge-alpha-liard.vercel.app';
+    const { data, error: authError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { emailRedirectTo: `${siteUrl}/auth/callback` },
+    });
 
     if (authError) {
       setError(authError.message);
@@ -45,7 +50,7 @@ export default function SignupPage() {
     <div className="rounded-2xl border p-8" style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
       <h2 className="text-2xl font-bold mb-2" style={{ color: "var(--text)" }}>Start your journey</h2>
       <p className="text-sm mb-6" style={{ color: "var(--text-muted)" }}>
-        Create your FORGE account. It&apos;s free.
+        Create your FORMA account. It&apos;s free.
       </p>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -92,7 +97,7 @@ export default function SignupPage() {
         </div>
 
         {error && (
-          <p className="text-sm px-3 py-2 rounded-lg" style={{ background: "rgba(192,52,29,0.1)", color: "var(--danger)" }}>
+          <p className="text-sm px-3 py-2 rounded-lg" style={{ background: "rgba(192,69,58,0.1)", color: "var(--danger)" }}>
             {error}
           </p>
         )}

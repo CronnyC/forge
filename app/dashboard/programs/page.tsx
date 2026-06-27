@@ -118,7 +118,7 @@ export default function ProgramsPage() {
       <div>
         <h1 className="text-2xl font-black mb-1" style={{ color: "var(--text)" }}>Programs</h1>
         <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-          Structured skill progressions. Enroll and FORGE will inject program exercises into your sessions.
+          Structured skill progressions. Enroll and FORMA will inject program exercises into your sessions.
         </p>
       </div>
 

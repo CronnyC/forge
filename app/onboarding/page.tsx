@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import Button from "@/components/ui/Button";
 import Progress from "@/components/ui/Progress";
 import { cn } from "@/lib/utils";
+import { saveOnboarding } from "./actions";
 
 const TOTAL_STEPS = 6;
 
@@ -83,68 +84,65 @@ export default function OnboardingPage() {
     setLoading(true);
     setError(null);
 
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { setError("Not authenticated"); setLoading(false); return; }
-
     const intensityMap = [0.5, 0.65, 0.8, 1.0];
 
-    const { error: updateError } = await supabase
-      .from("users")
-      .update({
-        height_cm: heightCm ? parseFloat(heightCm) : null,
-        weight_kg: weightKg ? parseFloat(weightKg) : null,
-        age: age ? parseInt(age) : null,
-        gender: gender || null,
-        goal: goal!,
-        equipment,
-        frequency_preference: frequency,
-        intensity_preference: intensityMap[intensityIdx],
-        duration_preference: duration,
-        mode_preference: mode,
-        onboarded_at: new Date().toISOString(),
-      })
-      .eq("id", user.id);
+    const err = await saveOnboarding({
+      height_cm: heightCm ? parseFloat(heightCm) : null,
+      weight_kg: weightKg ? parseFloat(weightKg) : null,
+      age: age ? parseInt(age) : null,
+      gender: gender || null,
+      goal: goal!,
+      equipment,
+      frequency_preference: frequency,
+      intensity_preference: intensityMap[intensityIdx],
+      duration_preference: duration,
+      mode_preference: mode,
+    });
 
-    if (updateError) { setError(updateError.message); setLoading(false); return; }
+    if (err) { setError(err); setLoading(false); return; }
 
-    // Seed benchmark performance logs
-    const benchmarks = [
-      { name: "Push-Up", val: parseFloat(maxPushups) || 0 },
-      { name: "Plank", val: parseFloat(plankSeconds) || 0 },
-      { name: "Pull-Up", val: parseFloat(maxPullups) || 0 },
-    ];
-
-    // Create a dummy session for benchmarks
-    const { data: session } = await supabase
-      .from("workout_sessions")
-      .insert({ user_id: user.id, mode_used: "benchmark", planned_duration: 5 })
-      .select()
-      .single();
-
-    if (session) {
-      for (const bm of benchmarks) {
-        if (bm.val > 0) {
-          const { data: ex } = await supabase
-            .from("exercises")
-            .select("id")
-            .ilike("name", `%${bm.name}%`)
-            .limit(1)
-            .maybeSingle();
-
-          if (ex) {
-            await supabase.from("performance_logs").insert({
-              user_id: user.id,
-              exercise_id: ex.id,
-              session_id: session.id,
-              result_value: bm.val,
-              is_personal_best: true,
-            });
+    // Seed benchmark performance logs (client-side, non-blocking)
+    try {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const benchmarks = [
+          { name: "Push-Up", val: parseFloat(maxPushups) || 0 },
+          { name: "Plank", val: parseFloat(plankSeconds) || 0 },
+          { name: "Pull-Up", val: parseFloat(maxPullups) || 0 },
+        ];
+        const { data: session } = await supabase
+          .from("workout_sessions")
+          .insert({ user_id: user.id, mode_used: "benchmark", planned_duration: 5 })
+          .select()
+          .single();
+        if (session) {
+          for (const bm of benchmarks) {
+            if (bm.val > 0) {
+              const { data: ex } = await supabase
+                .from("exercises")
+                .select("id")
+                .ilike("name", `%${bm.name}%`)
+                .limit(1)
+                .maybeSingle();
+              if (ex) {
+                await supabase.from("performance_logs").insert({
+                  user_id: user.id,
+                  exercise_id: ex.id,
+                  session_id: session.id,
+                  result_value: bm.val,
+                  is_personal_best: true,
+                });
+              }
+            }
           }
         }
       }
+    } catch {
+      // Benchmarks are non-critical — proceed regardless
     }
 
+    setLoading(false);
     router.push("/dashboard");
     router.refresh();
   }
@@ -159,7 +157,7 @@ export default function OnboardingPage() {
       {/* Header */}
       <div className="px-4 pt-8 pb-4 max-w-lg mx-auto w-full">
         <div className="flex items-center gap-3 mb-2">
-          <span className="text-lg font-black" style={{ color: "var(--accent)" }}>FORGE</span>
+          <span className="text-lg font-black" style={{ color: "var(--accent)" }}>FORMA</span>
           <span className="text-sm" style={{ color: "var(--text-muted)" }}>Setup</span>
         </div>
         <div className="flex items-center gap-3 mb-1">
@@ -205,7 +203,7 @@ export default function OnboardingPage() {
         )}
 
         {error && (
-          <p className="mt-4 text-sm px-3 py-2 rounded-lg" style={{ background: "rgba(192,52,29,0.1)", color: "var(--danger)" }}>
+          <p className="mt-4 text-sm px-3 py-2 rounded-lg" style={{ background: "rgba(192,69,58,0.1)", color: "var(--danger)" }}>
             {error}
           </p>
         )}
@@ -275,7 +273,7 @@ function StepGoal({ goal, setGoal }: { goal: Goal | null; setGoal: (g: Goal) => 
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold mb-1" style={{ color: "var(--text)" }}>Your primary goal</h2>
-        <p className="text-sm" style={{ color: "var(--text-muted)" }}>FORGE will optimize every session around this.</p>
+        <p className="text-sm" style={{ color: "var(--text-muted)" }}>FORMA will optimize every session around this.</p>
       </div>
       <div className="grid grid-cols-1 gap-3">
         {GOALS.map((g) => (
@@ -306,7 +304,7 @@ function StepEquipment({ equipment, toggle }: { equipment: string[]; toggle: (id
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold mb-1" style={{ color: "var(--text)" }}>Available equipment</h2>
-        <p className="text-sm" style={{ color: "var(--text-muted)" }}>FORGE defaults to pure bodyweight. Select what you have.</p>
+        <p className="text-sm" style={{ color: "var(--text-muted)" }}>FORMA defaults to pure bodyweight. Select what you have.</p>
       </div>
       <div className="flex flex-wrap gap-2">
         {EQUIPMENT_OPTIONS.map((eq) => (
@@ -341,7 +339,7 @@ function StepBenchmark({ maxPushups, setMaxPushups, plankSeconds, setPlankSecond
       <div>
         <h2 className="text-2xl font-bold mb-1" style={{ color: "var(--text)" }}>Starting point</h2>
         <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-          FORGE uses these to calibrate your first session. No pressure — just your honest best.
+          FORMA uses these to calibrate your first session. No pressure — just your honest best.
         </p>
       </div>
       <div className="space-y-4">
@@ -391,7 +389,7 @@ function StepPreferences({ frequency, setFrequency, intensityIdx, setIntensityId
     <div className="space-y-8">
       <div>
         <h2 className="text-2xl font-bold mb-1" style={{ color: "var(--text)" }}>Your preferences</h2>
-        <p className="text-sm" style={{ color: "var(--text-muted)" }}>These shape every session FORGE builds for you.</p>
+        <p className="text-sm" style={{ color: "var(--text-muted)" }}>These shape every session FORMA builds for you.</p>
       </div>
 
       <div>
@@ -457,15 +455,15 @@ function StepPreferences({ frequency, setFrequency, intensityIdx, setIntensityId
 
 function StepMode({ mode, setMode }: { mode: Mode; setMode: (m: Mode) => void }) {
   const modes: Array<{ id: Mode; title: string; desc: string; badge?: string }> = [
-    { id: "dynamic", title: "Dynamic (AI)", desc: "FORGE picks every exercise based on your goal, history, and feedback. Zero decisions.", badge: "Recommended" },
-    { id: "fixed_split", title: "Fixed Split", desc: "Push/Pull/Legs structure. FORGE picks exercises within each day's muscle group." },
+    { id: "dynamic", title: "Dynamic (AI)", desc: "FORMA picks every exercise based on your goal, history, and feedback. Zero decisions.", badge: "Recommended" },
+    { id: "fixed_split", title: "Fixed Split", desc: "Push/Pull/Legs structure. FORMA picks exercises within each day's muscle group." },
     { id: "template", title: "Template", desc: "Follow a curated program. Great for skill progressions like handstands or pull-ups." },
   ];
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold mb-1" style={{ color: "var(--text)" }}>How should FORGE decide?</h2>
+        <h2 className="text-2xl font-bold mb-1" style={{ color: "var(--text)" }}>How should FORMA decide?</h2>
         <p className="text-sm" style={{ color: "var(--text-muted)" }}>You can change this any time in your profile.</p>
       </div>
       <div className="space-y-3">

@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "FORGE — Dynamic Fitness",
+  title: "FORMA — Dynamic Fitness",
   description: "Home-first bodyweight fitness. No decision fatigue. Real workouts.",
 };
 

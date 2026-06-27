@@ -1,25 +1,25 @@
 @import "tailwindcss";
 
 :root {
-  --bg:        #0D0D10;
-  --surface:   #1A1A20;
-  --surface2:  #24242C;
-  --border:    #2E2E38;
-  --accent:    #C0341D;
-  --accent2:   #E8963C;
-  --text:      #F0EDE8;
-  --text-muted:#8A8890;
-  --success:   #4CAF7D;
-  --danger:    #C0341D;
+  --bg:        #0D1117;
+  --surface:   #161C26;
+  --surface2:  #1E2736;
+  --border:    #263040;
+  --accent:    #2E8FA6;
+  --accent-hover: #3AADC7;
+  --accent2:   #C4B28A;
+  --text:      #EAE6DC;
+  --text-muted:#8896A8;
+  --success:   #4A9E7F;
+  --danger:    #C0453A;
 
   /* Glass */
-  --glass-bg:  rgba(26, 26, 32, 0.72);
-  --glass-border: rgba(255,255,255,0.07);
+  --glass-bg:  rgba(22, 28, 38, 0.72);
+  --glass-border: rgba(255,255,255,0.06);
   --glass-blur: 18px;
 
-  /* Glow */
-  --glow-accent: 0 0 24px rgba(192, 52, 29, 0.35);
-  --glow-accent2: 0 0 24px rgba(232, 150, 60, 0.30);
+  /* Subtle glow */
+  --glow-accent: 0 0 20px rgba(46, 143, 166, 0.2);
 }
 
 @theme inline {
@@ -70,43 +70,23 @@ body {
   background-clip: text;
 }
 
-/* Glow button */
+/* Button interaction */
 .btn-glow {
-  box-shadow: var(--glow-accent);
-  transition: box-shadow 0.2s ease, transform 0.1s ease;
+  transition: opacity 0.2s ease, transform 0.1s ease;
 }
-.btn-glow:hover { box-shadow: 0 0 36px rgba(192, 52, 29, 0.55); }
-.btn-glow:active { transform: scale(0.97); box-shadow: 0 0 16px rgba(192, 52, 29, 0.4); }
+.btn-glow:hover { opacity: 0.9; }
+.btn-glow:active { transform: scale(0.97); }
 
-/* Pulse animation for CTA */
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(192,52,29,0.4), 0 0 40px rgba(192,52,29,0.15); }
-  50%       { box-shadow: 0 0 32px rgba(192,52,29,0.65), 0 0 64px rgba(192,52,29,0.25); }
-}
-.pulse-glow { animation: pulse-glow 2.4s ease-in-out infinite; }
-
-/* Animated grid background */
-@keyframes grid-shift {
-  0%   { transform: translateY(0); }
-  100% { transform: translateY(48px); }
-}
-
-/* Particle flicker */
-@keyframes flicker {
-  0%, 100% { opacity: 0.7; }
-  50%       { opacity: 0.3; }
+/* Fade up */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* Spin */
 @keyframes spin-slow {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
-}
-
-/* Fade up */
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* Skeleton loader */
@@ -145,9 +125,8 @@ input[type="range"]::-webkit-slider-thumb {
   border-radius: 50%;
   background: var(--accent);
   cursor: pointer;
-  box-shadow: 0 0 8px rgba(192,52,29,0.5);
   transition: box-shadow 0.15s ease;
 }
 input[type="range"]::-webkit-slider-thumb:hover {
-  box-shadow: 0 0 14px rgba(192,52,29,0.75);
+  box-shadow: 0 0 10px rgba(46, 143, 166, 0.5);
 }

@@ -45,7 +45,7 @@ export default function DashboardClient({ streak, recentSessions, enrollments, g
         <div>
           <h1 className="text-3xl font-black tracking-tighter" style={{ color: "var(--text)" }}>
             Ready to{" "}
-            <span className="gradient-text">FORGE</span>?
+            <span className="gradient-text">train</span>?
           </h1>
           <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
             Today&apos;s session: {goalLabel}
@@ -73,8 +73,8 @@ export default function DashboardClient({ streak, recentSessions, enrollments, g
             whileTap={{ scale: 0.985 }}
             className="relative overflow-hidden rounded-3xl p-6 cursor-pointer"
             style={{
-              background: "linear-gradient(135deg, #C0341D 0%, #8B2010 60%, #4D1208 100%)",
-              boxShadow: "0 8px 40px rgba(192,52,29,0.35), 0 2px 8px rgba(0,0,0,0.4)",
+              background: "linear-gradient(135deg, #2E8FA6 0%, #1E6B80 60%, #0F3D4D 100%)",
+              boxShadow: "0 8px 40px rgba(46,143,166,0.25), 0 2px 8px rgba(0,0,0,0.4)",
             }}
           >
             {/* Texture overlay */}
@@ -94,7 +94,7 @@ export default function DashboardClient({ streak, recentSessions, enrollments, g
               </div>
               <h2 className="text-2xl font-black text-white mb-1">Start Session</h2>
               <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>
-                FORGE builds your workout in real-time
+                FORMA builds your workout in real-time
               </p>
             </div>
             <div className="absolute right-4 bottom-3 opacity-[0.08]">
@@ -131,7 +131,7 @@ export default function DashboardClient({ streak, recentSessions, enrollments, g
             {enrollments.map((e) => (
               <Link key={e.id} href="/dashboard/programs">
                 <motion.div
-                  whileHover={{ scale: 1.01, borderColor: "rgba(232,150,60,0.4)" }}
+                  whileHover={{ scale: 1.01, borderColor: "rgba(196,178,138,0.4)" }}
                   className="flex items-center gap-3 p-3 rounded-xl border transition-all"
                   style={{ background: "var(--surface)", borderColor: "var(--border)" }}
                 >

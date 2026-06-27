@@ -300,9 +300,9 @@ export default function SessionPage() {
 
           <div
             className="rounded-2xl p-4 text-sm leading-relaxed"
-            style={{ background: "rgba(192,52,29,0.07)", border: "1px solid rgba(192,52,29,0.18)", color: "var(--text-muted)" }}
+            style={{ background: "rgba(46,143,166,0.07)", border: "1px solid rgba(46,143,166,0.15)", color: "var(--text-muted)" }}
           >
-            FORGE scores every exercise against your history and adapts on the fly. Hit{" "}
+            FORMA scores every exercise against your history and adapts on the fly. Hit{" "}
             <strong style={{ color: "var(--text)" }}>Too Easy</strong>,{" "}
             <strong style={{ color: "var(--text)" }}>Too Hard</strong>, or{" "}
             <strong style={{ color: "var(--text)" }}>Hurts</strong> to recalibrate instantly.
@@ -310,7 +310,7 @@ export default function SessionPage() {
         </div>
 
         {error && (
-          <p className="text-sm py-2 px-3 rounded-lg mb-3" style={{ background: "rgba(192,52,29,0.1)", color: "var(--danger)" }}>{error}</p>
+          <p className="text-sm py-2 px-3 rounded-lg mb-3" style={{ background: "rgba(192,69,58,0.1)", color: "var(--danger)" }}>{error}</p>
         )}
 
         <motion.div whileTap={{ scale: 0.98 }}>
@@ -344,7 +344,7 @@ export default function SessionPage() {
           </div>
           <h1 className="text-3xl font-black mb-1" style={{ color: "var(--text)" }}>Session Complete</h1>
           <p style={{ color: "var(--text-muted)" }} className="text-sm">
-            {completedExercises.length} sets · {duration} min · forged
+            {completedExercises.length} sets · {duration} min · done
           </p>
         </motion.div>
 
@@ -399,7 +399,7 @@ export default function SessionPage() {
       >
         <h2 className="text-xl font-bold mb-2" style={{ color: "var(--text)" }}>Where does it hurt?</h2>
         <p className="text-sm mb-6" style={{ color: "var(--text-muted)" }}>
-          FORGE will avoid these areas for the rest of this session.
+          FORMA will avoid these areas for the rest of this session.
         </p>
         <div className="grid grid-cols-3 gap-2 mb-6">
           {BODY_SECTIONS.map((bs) => (
@@ -593,7 +593,7 @@ export default function SessionPage() {
                 {currentExercise?.source === "program" && (
                   <span
                     className="text-xs px-2 py-1 rounded-lg uppercase tracking-wide font-bold"
-                    style={{ background: "rgba(232,150,60,0.12)", color: "var(--accent2)" }}
+                    style={{ background: "rgba(196,178,138,0.12)", color: "var(--accent2)" }}
                   >
                     Program
                   </span>
