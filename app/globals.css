@@ -1,16 +1,25 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #0D0D10;
-  --surface: #1A1A20;
-  --surface2: #24242C;
-  --border: #2E2E38;
-  --accent: #C0341D;
-  --accent2: #E8963C;
-  --text: #F0EDE8;
-  --text-muted: #8A8890;
-  --success: #4CAF7D;
-  --danger: #C0341D;
+  --bg:        #0D0D10;
+  --surface:   #1A1A20;
+  --surface2:  #24242C;
+  --border:    #2E2E38;
+  --accent:    #C0341D;
+  --accent2:   #E8963C;
+  --text:      #F0EDE8;
+  --text-muted:#8A8890;
+  --success:   #4CAF7D;
+  --danger:    #C0341D;
+
+  /* Glass */
+  --glass-bg:  rgba(26, 26, 32, 0.72);
+  --glass-border: rgba(255,255,255,0.07);
+  --glass-blur: 18px;
+
+  /* Glow */
+  --glow-accent: 0 0 24px rgba(192, 52, 29, 0.35);
+  --glow-accent2: 0 0 24px rgba(232, 150, 60, 0.30);
 }
 
 @theme inline {
@@ -26,26 +35,119 @@
   --color-danger: var(--danger);
 }
 
-* {
-  box-sizing: border-box;
-}
+*, *::before, *::after { box-sizing: border-box; }
 
 html {
   background: var(--bg);
   color: var(--text);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 body {
   background: var(--bg);
   color: var(--text);
-  min-height: 100vh;
+  min-height: 100svh;
   margin: 0;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism card */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent2) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glow button */
+.btn-glow {
+  box-shadow: var(--glow-accent);
+  transition: box-shadow 0.2s ease, transform 0.1s ease;
+}
+.btn-glow:hover { box-shadow: 0 0 36px rgba(192, 52, 29, 0.55); }
+.btn-glow:active { transform: scale(0.97); box-shadow: 0 0 16px rgba(192, 52, 29, 0.4); }
+
+/* Pulse animation for CTA */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(192,52,29,0.4), 0 0 40px rgba(192,52,29,0.15); }
+  50%       { box-shadow: 0 0 32px rgba(192,52,29,0.65), 0 0 64px rgba(192,52,29,0.25); }
+}
+.pulse-glow { animation: pulse-glow 2.4s ease-in-out infinite; }
+
+/* Animated grid background */
+@keyframes grid-shift {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(48px); }
+}
+
+/* Particle flicker */
+@keyframes flicker {
+  0%, 100% { opacity: 0.7; }
+  50%       { opacity: 0.3; }
+}
+
+/* Spin */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Fade up */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Skeleton loader */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--surface) 25%, var(--surface2) 50%, var(--surface) 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: 12px;
 }
 
 /* Custom scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* Range input */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--surface2);
+  outline: none;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(192,52,29,0.5);
+  transition: box-shadow 0.15s ease;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 14px rgba(192,52,29,0.75);
+}

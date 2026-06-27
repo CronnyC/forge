@@ -29,14 +29,14 @@ export async function proxy(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  // Public routes
-  const publicRoutes = ["/login", "/signup"];
-  const isPublicRoute = publicRoutes.some((r) => pathname.startsWith(r));
+  // Public routes (no auth required)
+  const publicRoutes = ["/login", "/signup", "/landing"];
+  const isPublicRoute = publicRoutes.some((r) => pathname.startsWith(r)) || pathname === "/";
   const isApiRoute = pathname.startsWith("/api");
 
   if (isApiRoute) return supabaseResponse;
 
-  // Not authenticated → login
+  // Not authenticated → show landing (root) or redirect login for protected routes
   if (!user && !isPublicRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";

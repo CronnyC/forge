@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import PageTransition from "@/components/PageTransition";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -14,6 +15,9 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#0D0D10",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({
@@ -24,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.className}>
       <body className="min-h-screen" style={{ background: "var(--bg)", color: "var(--text)" }}>
-        {children}
+        <PageTransition>{children}</PageTransition>
       </body>
     </html>
   );
